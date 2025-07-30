@@ -99,17 +99,17 @@ export default function Experience() {
       <div className="horizontal-scroll relative overflow-hidden">
        <section className="exp-wrapper flex w-[400vw] h-screen">
   <ExperienceBlock
-    title="Full Stack Developer Intern"
-    company="Naresh IT Hyderabad"
-    duration="[March, 2023] – [June, 2023]"
-    img="/images/naresh.png"
-    details={[
-      "Built an E-commerce store with MERN stack.",
-      "Integrated payment gateways and authentication.",
-      "Implemented REST APIs, JWT, and MongoDB storage.",
-    ]}
-  />
-
+  title="Full Stack Developer Intern"
+  company="Naresh IT Hyderabad"
+  duration="[March, 2023] – [June, 2023]"
+  img="/images/naresh.png"
+  variant="large"   // ✅ This makes the first card bigger
+  details={[
+    "Built an E-commerce store with MERN stack.",
+    "Integrated payment gateways and authentication.",
+    "Implemented REST APIs, JWT, and MongoDB storage.",
+  ]}
+/>
   <ExperienceBlock
     title="Freelance Frontend Developer"
     company="Cansell.in"
@@ -139,7 +139,7 @@ export default function Experience() {
     title="3D Model Website Developer"
     company="Personal Project"
     duration="[2024]"
-    img="/projects/P4.png"
+    img="/projects/p4.png"
     details={[
       "Created an interactive 3D viewer with React Three Fiber and Framer Motion.",
       "Implemented hover tilt effects and smooth model rotation with performance optimizations.",
@@ -155,24 +155,44 @@ export default function Experience() {
 }
 
 /* ✅ Reusable Experience Card */
-function ExperienceBlock({ title, company, duration, img, details, achievements }) {
+function ExperienceBlock({ title, company, duration, img, details, variant }) {
+  // ✅ Apply different sizes for the first vs. other cards
+  const cardWidth = variant === "large" 
+    ? "w-full sm:w-[90%] md:w-[350px] lg:w-[350px]" 
+    : "w-full sm:w-[90%] md:w-[400px] lg:w-[450px]";
+
+  const cardHeight = variant === "large" 
+    ? "h-[330px] sm:h-[300px] md:h-[350px]" 
+    : "h-[250px] sm:h-[300px] md:h-[350px]";
+
   return (
-    <div className="exp-block w-screen h-screen flex flex-col lg:flex-row justify-center items-center p-10">
-      <CardContainer className="inter-var">
-        <CardBody className="relative group/card w-[450px] h-[350px] rounded-xl p-6 border bg-gradient-to-br from-gray-800 to-black">
-          <CardItem translateZ="100" className="w-full mt-4">
-            <img src={img} alt={company} className="h-60 w-full object-fit rounded-xl shadow-xl" />
+    <div className="exp-block w-screen min-h-screen flex flex-col lg:flex-row justify-center items-center p-4 sm:p-8">
+      
+      {/* ✅ 3D Card with Conditional Sizes */}
+      <CardContainer className={`inter-var ${cardWidth}`}>
+        <CardBody className={`relative group/card ${cardWidth} ${cardHeight} rounded-xl p-4 sm:p-6 border bg-gradient-to-br from-gray-800 to-black`}>
+          <CardItem translateZ="100" className="w-full mt-2 sm:mt-4">
+            <img 
+              src={img} 
+              alt={company} 
+              className="h-full w-full object-cover rounded-xl shadow-xl" 
+            />
           </CardItem>
         </CardBody>
       </CardContainer>
 
-      <div className="details text-gray-300 max-w-xl ml-8">
-        <h2 className="text-3xl font-bold text-blue-400">{title}</h2>
-        <h3 className="text-lg">{company}</h3>
+      {/* ✅ Details Section */}
+      <div className="details text-gray-300 max-w-lg mt-6 lg:mt-0 lg:ml-8 text-center lg:text-left">
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-400">{title}</h2>
+        <h3 className="text-md sm:text-lg">{company}</h3>
         <p className="italic mb-4">{duration}</p>
-        {details.map((d, i) => <li key={i}>{d}</li>)}
-        <ul className="list-disc ml-5"> </ul>
+
+        <ul className="list-disc list-inside space-y-2 text-sm sm:text-base">
+          {details.map((d, i) => <li key={i}>{d}</li>)}
+        </ul>
       </div>
+
     </div>
   );
 }
+

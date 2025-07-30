@@ -8,6 +8,34 @@ import Image from "next/image";
 import Skills from '../skills/page';
 import Experience from '../experience/experience';
 import { useInView } from 'framer-motion';
+import { Lens } from '@/components/ui/lens'; // ✅ Import Lens
+import { motion } from 'framer-motion';
+
+const SectionHeading = ({ title, icon }) => (
+  <motion.div
+    initial={{ opacity: 0, y: -40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    className="top-0 z-50 backdrop-blur-md bg-black/40 py-4"
+  >
+    <div className="relative w-fit mx-auto flex flex-col items-center">
+      {icon && <motion.span 
+                  animate={{ rotate: [0, 10, -10, 0] }} 
+                  transition={{ repeat: Infinity, duration: 3 }} 
+                  className="text-2xl mb-1">
+                  {icon}
+               </motion.span>}
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold 
+                     bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 
+                     bg-clip-text text-transparent animate-gradient drop-shadow-lg tracking-wider">
+        {title}
+      </h1>
+      <span className="absolute bottom-[-10px] w-full h-[3px] bg-gradient-to-r 
+                       from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-pulse"></span>
+    </div>
+  </motion.div>
+);
+
 
 export default function About() {
   const ref = useRef(null);
@@ -22,15 +50,14 @@ export default function About() {
         transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s"
       }}
     >
-      <section id='about' className="firstSection mt-4 h-full">
-        <hr className="h-1 bg-gradient-to-r from-blue-900 to-purple-900" />
-        <h1 className="flex justify-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-blue-500 dark:text-blue-500 bg-clip-text my-4">
-          About
-        </h1>
-        <hr className="h-1 bg-gradient-to-r from-blue-900 to-purple-900" />
+      <section id='about' className="firstSection mt-4 min-h-[150vh]">
+            <SectionHeading title="About" />
+
 
         <div className="container-about mt-10">
-          <div className="content-container">
+
+           <div className="content-container">
+          <Lens spotlightForText>
             <p className="content text-lg sm:text-xl text-gray-300 leading-relaxed">
               Hello! I'm <span className="font-bold italic text-blue-400">Airaz Khan</span>, a passionate and dedicated FullStack developer who has recently completed a <span className="text-blue-400">Bachelor of Computer Applications (BCA)</span>.  
               
@@ -46,17 +73,21 @@ export default function About() {
 
               <br />Thank you for visiting my portfolio!
             </p>
+          </Lens>
           </div>
 
+          {/* ✅ Wrap Image with Lens */}
           <div className='sm:flex justify-center h-1/2 xl:ml-44'>
             <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-gradient-to-br from-black to-gray-900">
-              <Image
-                src={`/images/s1.jpg`}
-                alt="Airaz Khan"
-                height="400"
-                width="400"
-                className="object-contain rounded-lg"
-              />
+              <Lens>
+                <Image
+                  src={`/images/s1.jpg`}
+                  alt="Airaz Khan"
+                  height="400"
+                  width="400"
+                  className="object-contain rounded-lg"
+                />
+              </Lens>
             </BackgroundGradient>
           </div>
         </div>
