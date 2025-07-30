@@ -9,7 +9,33 @@ import { useInView } from "framer-motion"
 import emailjs from "@emailjs/browser"
 import Link from "next/link"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import {  motion } from 'framer-motion';
 
+
+const SectionHeading = ({ title, icon }) => (
+  <motion.div
+    initial={{ opacity: 0, y: -40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    className="sticky top-0 z-50 backdrop-blur-md bg-black/40 py-4"
+  >
+    <div className="relative w-fit mx-auto flex flex-col items-center">
+      {icon && <motion.span 
+                  animate={{ rotate: [0, 10, -10, 0] }} 
+                  transition={{ repeat: Infinity, duration: 3 }} 
+                  className="text-2xl mb-1">
+                  {icon}
+               </motion.span>}
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold 
+                     bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 
+                     bg-clip-text text-transparent animate-gradient drop-shadow-lg tracking-wider">
+        {title}
+      </h1>
+      <span className="absolute bottom-[-10px] w-full h-[3px] bg-gradient-to-r 
+                       from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-pulse"></span>
+    </div>
+  </motion.div>
+);
 // Stars component for background
 const Stars = (props) => {
   const ref = useRef()
@@ -104,11 +130,8 @@ export default function Contact() {
 
   return (
     <div className="relative h-screen flex flex-col items-center" id="contact" ref={ref}>
-      <hr className="h-1 w-full bg-blue-900" />
-      <h1 className="flex justify-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-blue-500 dark:text-blue-500 bg-clip-text my-4">
-        Contact
-      </h1>
-      <hr className="h-1 w-full bg-blue-900 mb-8" />
+              <SectionHeading title="Contact" icon="🚀" />
+
 
       <StarsCanvas />
 

@@ -62,7 +62,7 @@ export function Footer() {
       className="hover:text-gray-400 transition-colors duration-300 text-lg"
       
     >
-     <i class="fa-brands fa-whatsapp"></i>
+     <i className="fa-brands fa-whatsapp"></i>
     </a>
             <a
               href="https://github.com/developerMark17"

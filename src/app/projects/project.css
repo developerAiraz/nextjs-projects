@@ -1,0 +1,7 @@
+.project-card {
+  perspective: 1200px;
+}
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}

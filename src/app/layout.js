@@ -2,10 +2,11 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar/navbar";
 import { Footer } from "./footer/footer";
-import SplashCursor from "@/Animations/SplashCursor/SplashCursor";
+// import SplashCursor from "@/Animations/SplashCursor/SplashCursor";
+import CanvasCursor from "@/components/CanvasCursor/CanvasCursor";
+import 'react-creative-cursor/dist/styles.css';
 
 const inter = Inter({ subsets: ["latin"] });
-
 export const metadata = {
   metadataBase: new URL("https://markcoder.tech"), // Replace with your actual domain
   title: "Markcoder's Portfolio",
@@ -72,7 +73,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
     
       <body className={inter.className}>
-        <SplashCursor />
+        {/* <SplashCursor /> */}
+        <CanvasCursor/>
         <Navbar />
         {children}
         <Footer />
