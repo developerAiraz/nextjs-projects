@@ -82,38 +82,42 @@ export default function Skills() {
           {/* 🎯 Top Logo */}
           <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
             <CardContainer className="inter-var top-image">
-              <CardBody className="bg-black relative group/card border border-white/20 rounded-xl p-6 shadow-xl hover:shadow-purple-500/30 transition">
+              <CardBody className="bg-black relative group/card border border-white/20 rounded-xl p-4 sm:p-6 w-full max-w-[90%] sm:max-w-[400px] shadow-xl hover:shadow-purple-500/30 transition">
                 <CardItem translateZ="100" className="w-full mt-4">
-                  <img src="/images/logo.png" alt="Skills Logo" className="h-60 w-full object-cover rounded-xl" />
+                  <img 
+                    src="/images/logo.png" 
+                    alt="Skills Logo" 
+                    className="w-full h-auto max-h-[200px] sm:max-h-[240px] object-contain rounded-xl" 
+                  />
                 </CardItem>
               </CardBody>
             </CardContainer>
           </motion.div>
 
           {/* 🌟 Skills Grid */}
-             <div className='hex-grid mt-10'>
-                        {skillsData.map((skill, index) => (
-                            <div key={index} className="hexagon">
-                                <CardContainer className="inter-var">
-                                    <CardBody className="relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-gray-900 dark:border-white/[0.2] border-black/[0.1] w-full h-full rounded-xl p-4 border">
-                                        <CardItem
-                                            translateZ="100"
-                                            className="w-full h-full flex flex-col items-center justify-center"
-                                        >
-                                            <img 
-                                                src={skill.icon} 
-                                                alt={`${skill.name} icon`}
-                                                className="w-16 h-16 object-contain mb-2"
-                                            />
-                                            <span className="text-sm font-medium text-center dark:text-white">
-                                                {skill.name}
-                                            </span>
-                                        </CardItem>
-                                    </CardBody>
-                                </CardContainer>
-                            </div>
-                        ))}
-                    </div>
+          <div className='hex-grid mt-10'>
+            {skillsData.map((skill, index) => (
+              <div key={index} className="hexagon">
+                <CardContainer className="inter-var">
+                  <CardBody className="relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-gray-900 dark:border-white/[0.2] border-black/[0.1] w-full h-full rounded-xl p-4 border">
+                    <CardItem
+                      translateZ="100"
+                      className="w-full h-full flex flex-col items-center justify-center"
+                    >
+                      <img 
+                        src={skill.icon} 
+                        alt={`${skill.name} icon`}
+                        className="w-16 h-16 object-contain mb-2"
+                      />
+                      <span className="text-sm font-medium text-center dark:text-white">
+                        {skill.name}
+                      </span>
+                    </CardItem>
+                  </CardBody>
+                </CardContainer>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
