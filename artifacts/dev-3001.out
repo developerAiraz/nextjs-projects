@@ -1,0 +1,28 @@
+
+> nextjs-projects@0.1.0 dev
+> next dev --port 3001
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3001
+
+ ✓ Starting...
+ ✓ Ready in 3s
+ ○ Compiling /blog ...
+ ✓ Compiled /blog in 14.1s (3429 modules)
+ GET /blog 200 in 14812ms
+ GET / 200 in 14828ms
+ GET / 200 in 213ms
+ GET / 200 in 218ms
+ GET /blog 200 in 245ms
+ ✓ Compiled in 1038ms (3429 modules)
+ ✓ Compiled in 935ms (3429 modules)
+ ✓ Compiled /_not-found in 306ms (3418 modules)
+ GET /blog 404 in 455ms
+ GET / 200 in 281ms
+ GET /blog 200 in 167ms
+ GET /blog 200 in 71ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1736ms (3641 modules)
+ GET /blog 404 in 2149ms
+ GET /blog 200 in 240ms
+ ✓ Compiled in 7.8s (3650 modules)

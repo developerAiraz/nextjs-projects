@@ -1,198 +1,205 @@
-import { useState, useRef, useEffect, Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Points, PointMaterial, Preload, OrbitControls, useGLTF } from "@react-three/drei";
-import * as random from "maath/random/dist/maath-random.esm";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { useInView } from "framer-motion";
-import emailjs from "@emailjs/browser";
-import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { motion } from "framer-motion";
-import { useFrame } from "@react-three/fiber";
+'use client';
 
-/* 🌟 Section Heading */
-const SectionHeading = ({ title, icon }) => (
-  <motion.div
-    initial={{ opacity: 0, y: -40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    className="sticky top-0 z-50 backdrop-blur-md bg-black/40 py-4"
-  >
-    <div className="relative w-fit mx-auto flex flex-col items-center">
-      {icon && (
-        <motion.span
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 3 }}
-          className="text-2xl mb-1"
-        >
-          {icon}
-        </motion.span>
-      )}
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold 
-                     bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 
-                     bg-clip-text text-transparent animate-gradient drop-shadow-lg tracking-wider">
-        {title}
-      </h1>
-      <span className="absolute bottom-[-10px] w-full h-[3px] bg-gradient-to-r 
-                       from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-pulse"></span>
-    </div>
-  </motion.div>
-);
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
+import emailjs from '@emailjs/browser';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, PointMaterial, Points, Preload, useGLTF } from '@react-three/drei';
+import { motion, useInView } from 'framer-motion';
+import { Mail, MapPin, MessageCircle, Send } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-/* 🌌 Stars Background */
-const Stars = (props) => {
+useGLTF.preload('/planet/scene.gltf');
+
+function StarField() {
   const ref = useRef();
-  const [sphere] = useState(() => random.inSphere(new Float32Array(5000), { radius: 1.2 }));
+  const sphere = useMemo(() => {
+    const positions = new Float32Array(4500);
+    for (let i = 0; i < positions.length; i += 3) {
+      const radius = Math.cbrt(Math.random()) * 1.25;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+
+      positions[i] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i + 2] = radius * Math.cos(phi);
+    }
+    return positions;
+  }, []);
+
   useFrame((_, delta) => {
-    ref.current.rotation.x -= delta / 10;
-    ref.current.rotation.y -= delta / 15;
+    if (!ref.current) return;
+    ref.current.rotation.x -= delta / 12;
+    ref.current.rotation.y -= delta / 16;
   });
+
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
-      <Points ref={ref} positions={sphere} stride={3} frustumCulled {...props}>
-        <PointMaterial transparent color="#f272c8" size={0.002} sizeAttenuation depthWrite={false} />
+      <Points ref={ref} positions={sphere} stride={3} frustumCulled>
+        <PointMaterial transparent color="#22d3ee" size={0.002} sizeAttenuation depthWrite={false} />
       </Points>
     </group>
   );
-};
+}
 
-const StarsCanvas = () => (
-  <div className="w-full h-auto absolute inset-0 z-[-1]">
-    <Canvas camera={{ position: [0, 0, 1] }}>
-      <Suspense fallback={null}>
-        <Stars />
-      </Suspense>
-      <Preload all />
-    </Canvas>
-  </div>
-);
-
-/* 🌍 Earth Model with dynamic scaling */
-const Earth = ({ scale }) => {
-  const earth = useGLTF("/planet/scene.gltf");
-  return <primitive object={earth.scene} scale={scale} />;
-};
-
-/* 📩 Main Contact Component */
-export default function Contact() {
-  const ref = useRef(null);
-  const isInView = useInView(ref);
-  const [formData, setFormData] = useState({ email: "", message: "" });
-  const [alertMessage, setAlertMessage] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-  const [earthScale, setEarthScale] = useState(2.5);
-
-  /* ✅ Dynamic Earth Scaling */
-  useEffect(() => {
-    const updateScale = () => {
-      if (window.innerWidth < 400) setEarthScale(1.6);
-      else if (window.innerWidth < 600) setEarthScale(2);
-      else if (window.innerWidth < 900) setEarthScale(2.3);
-      else setEarthScale(2.5);
-    };
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, []);
-
-  const handleChange = (e) => setFormData({ ...formData, [e.target.id]: e.target.value });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    emailjs.sendForm("service_60igyvp", "template_x0arc9d", e.target, "nFpVEp87LmSPZPs1d").then(
-      () => {
-        setFormData({ email: "", message: "" });
-        showAnimatedAlert("Message sent successfully!");
-      },
-      () => showAnimatedAlert("Failed to send message, please try again.")
-    );
-  };
-
-  const showAnimatedAlert = (msg) => {
-    setAlertMessage(msg);
-    setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 3000);
-  };
-
+function StarsCanvas() {
   return (
-    <div className="relative h-auto min-h-screen flex flex-col items-center px-3" id="contact" ref={ref}>
-      <SectionHeading title="Contact" icon="🚀" />
-      <StarsCanvas />
-
-      {showAlert && (
-        <Alert>
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>{alertMessage}</AlertDescription>
-        </Alert>
-      )}
-
-      <div
-        style={{
-          transform: isInView ? "none" : "translateX(-200px)",
-          opacity: isInView ? 1 : 0,
-          transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
-        }}
-        className="flex flex-col lg:flex-row items-center justify-center gap-6 mt-8 w-full"
-      >
-        {/* 📧 Contact Form */}
-        <div className="w-full sm:w-[90%] md:w-[420px] lg:w-[500px] p-4 shadow-input bg-black border border-blue-300 rounded-2xl">
-          <h2 className="font-bold text-xl text-white">Contact Us</h2>
-          <div className="flex justify-between items-center mt-4 mb-6">
-            <div className="text-white">
-              <p className="font-semibold">Email us at:</p>
-              <Link href="mailto:webdevairaz@gmail.com" className="text-blue-400">webdevairaz@gmail.com</Link>
-            </div>
-            <a href="https://wa.me/9984400856" target="_blank" rel="noopener noreferrer"
-               className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-2 text-xs rounded-full flex items-center">
-              <img src="/images/what.gif" className="w-10 mr-1" alt="WhatsApp" />
-            </a>
-          </div>
-
-          <form className="my-8" onSubmit={handleSubmit}>
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="email" className="text-white">Email Address</Label>
-              <Input id="email" placeholder="Enter your email" type="email" name="user_email" value={formData.email} onChange={handleChange} required />
-            </LabelInputContainer>
-
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="message" className="text-white">Message</Label>
-              <Input id="message" placeholder="Message" type="text" name="message" value={formData.message} onChange={handleChange} required />
-            </LabelInputContainer>
-
-            <button className="bg-gradient-to-br relative group/btn from-black to-neutral-600 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]" type="submit">
-              Send &rarr;
-              <BottomGradient />
-            </button>
-            <div className="bg-gradient-to-r from-transparent via-neutral-300 to-transparent my-8 h-[1px] w-full" />
-          </form>
-        </div>
-
-        {/* 🌍 Earth Canvas */}
-        <div className="relative w-full max-w-[480px] h-[40vh] sm:h-[50vh] md:h-[60vh] flex justify-center">
-          <Canvas dpr={[1, 2]} gl={{ preserveDrawingBuffer: true }} camera={{ position: [-3, 2, 6], fov: 40 }}>
-            <Suspense>
-              <OrbitControls autoRotate enableZoom={false} enablePan={false} />
-              <Earth scale={earthScale} />
-              <Preload all />
-            </Suspense>
-          </Canvas>
-        </div>
-      </div>
+    <div className="contact-stars" aria-hidden="true">
+      <Canvas camera={{ position: [0, 0, 1] }}>
+        <Suspense fallback={null}>
+          <StarField />
+        </Suspense>
+        <Preload all />
+      </Canvas>
     </div>
   );
 }
 
-/* 🌈 Bottom Gradient */
-const BottomGradient = () => (
-  <>
-    <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-    <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-  </>
-);
+function Earth({ scale }) {
+  const earth = useGLTF('/planet/scene.gltf');
+  return <primitive object={earth.scene} scale={scale} />;
+}
 
-/* 🏷️ Label Input Container */
-const LabelInputContainer = ({ children, className }) => (
-  <div className={cn("flex flex-col space-y-2 w-full", className)}>{children}</div>
-);
+export default function Contact() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-120px' });
+  const [formData, setFormData] = useState({ email: '', message: '' });
+  const [alertMsg, setAlertMsg] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [earthScale, setEarthScale] = useState(2.5);
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      const width = window.innerWidth;
+      setEarthScale(width < 420 ? 1.55 : width < 700 ? 1.95 : width < 980 ? 2.25 : 2.55);
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  const showMsg = (msg) => {
+    setAlertMsg(msg);
+    setShowAlert(true);
+    window.setTimeout(() => setShowAlert(false), 3600);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSending(true);
+
+    emailjs
+      .sendForm('service_60igyvp', 'template_x0arc9d', event.target, 'nFpVEp87LmSPZPs1d')
+      .then(() => {
+        setFormData({ email: '', message: '' });
+        showMsg("Message sent. I'll get back to you soon.");
+      })
+      .catch(() => showMsg('Failed to send. Please email me directly.'))
+      .finally(() => setSending(false));
+  };
+
+  return (
+    <div ref={ref} className="section-inner contact-section">
+      <StarsCanvas />
+
+      <motion.div
+        className="section-header"
+        initial={{ opacity: 0, y: 28 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.65 }}
+      >
+        <p className="section-kicker">Start A Build</p>
+        <h2 className="premium-heading">Get In Touch</h2>
+      </motion.div>
+
+      {showAlert && (
+        <motion.div
+          className="contact-alert"
+          initial={{ opacity: 0, y: -18 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Alert>
+            <AlertTitle>Message</AlertTitle>
+            <AlertDescription>{alertMsg}</AlertDescription>
+          </Alert>
+        </motion.div>
+      )}
+
+      <motion.div
+        className="contact-grid"
+        initial={{ opacity: 0, y: 34 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.72, delay: 0.14 }}
+      >
+        <form className="contact-form surface-panel" onSubmit={handleSubmit}>
+          <div className="panel-rule" />
+          <h3>Tell me about your project.</h3>
+
+          <div className="contact-quick-links">
+            <Link href="mailto:webdevairaz@gmail.com">
+              <Mail size={17} />
+              webdevairaz@gmail.com
+            </Link>
+            <a href="https://wa.me/9984400856" target="_blank" rel="noreferrer">
+              <MessageCircle size={17} />
+              WhatsApp
+            </a>
+          </div>
+
+          <label>
+            <span>Email Address</span>
+            <input
+              type="email"
+              name="user_email"
+              value={formData.email}
+              onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))}
+              placeholder="you@example.com"
+              required
+            />
+          </label>
+
+          <label>
+            <span>Message</span>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={(event) => setFormData((prev) => ({ ...prev, message: event.target.value }))}
+              placeholder="Project scope, timeline, or collaboration idea"
+              rows={6}
+              required
+            />
+          </label>
+
+          <button type="submit" className="primary-action contact-submit" disabled={sending}>
+            {sending ? 'Sending' : 'Send Message'}
+            <Send size={16} />
+          </button>
+        </form>
+
+        <aside className="contact-orbit surface-panel">
+          <div className="orbit-meta">
+            <span>
+              <MapPin size={16} />
+              India
+            </span>
+            <strong>Available for freelance and product work</strong>
+          </div>
+          <div className="earth-stage">
+            <Canvas dpr={[1, 1.7]} gl={{ preserveDrawingBuffer: true, antialias: true }} camera={{ position: [-3, 2, 6], fov: 40 }}>
+              <Suspense fallback={null}>
+                <ambientLight intensity={0.45} />
+                <pointLight position={[4, 3, 4]} intensity={2} color="#22d3ee" />
+                <pointLight position={[-3, -2, 3]} intensity={1.4} color="#f59e0b" />
+                <OrbitControls autoRotate enableZoom={false} enablePan={false} />
+                <Earth scale={earthScale} />
+                <Preload all />
+              </Suspense>
+            </Canvas>
+          </div>
+        </aside>
+      </motion.div>
+    </div>
+  );
+}

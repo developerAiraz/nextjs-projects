@@ -1,0 +1,60 @@
+.next-codex : The term '.next-codex' is not recognized as the name of a cmdlet, function, script file, or operable 
+program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:20
++ $env:NEXT_DIST_DIR=.next-codex; npm run dev -- --port 3001
++                    ~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.next-codex:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+[Error: EPERM: operation not permitted, open 'U:\nextjs-projects\.next\trace'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'open',
+  path: 'U:\\nextjs-projects\\.next\\trace'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'U:\nextjs-projects\.next\server\vendor-chunks\esprima.js'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/esprima' in U:\nextjs-projects\.next\server for build dependencies doesn't lead to expected result 'U:\nextjs-projects\.next\server\vendor-chunks\esprima.js', but to 'Error: Can't resolve './vendor-chunks/esprima' in 'U:\nextjs-projects\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/esprima (expected U:\nextjs-projects\.next\server\vendor-chunks\esprima.js)
+<w>  at file dependencies U:\nextjs-projects\.next\server\webpack-runtime.js
+<w>  at file U:\nextjs-projects\.next\server\webpack-runtime.js
+<w>  at file dependencies U:\nextjs-projects\.next\server\pages\_error.js
+<w>  at file U:\nextjs-projects\.next\server\pages\_error.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\server\require.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\server\require.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\server\load-components.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\build\utils.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\build\utils.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/extend-shallow' in U:\nextjs-projects\.next\server for build dependencies doesn't lead to expected result 'U:\nextjs-projects\.next\server\vendor-chunks\extend-shallow.js', but to 'Error: Can't resolve './vendor-chunks/extend-shallow' in 'U:\nextjs-projects\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/extend-shallow (expected U:\nextjs-projects\.next\server\vendor-chunks\extend-shallow.js)
+<w>  at file dependencies U:\nextjs-projects\.next\server\webpack-runtime.js
+<w>  at file U:\nextjs-projects\.next\server\webpack-runtime.js
+<w>  at file dependencies U:\nextjs-projects\.next\server\pages\_error.js
+<w>  at file U:\nextjs-projects\.next\server\pages\_error.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\server\require.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\server\require.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\server\load-components.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\build\utils.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\build\utils.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/is-extendable' in U:\nextjs-projects\.next\server for build dependencies doesn't lead to expected result 'U:\nextjs-projects\.next\server\vendor-chunks\is-extendable.js', but to 'Error: Can't resolve './vendor-chunks/is-extendable' in 'U:\nextjs-projects\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/is-extendable (expected U:\nextjs-projects\.next\server\vendor-chunks\is-extendable.js)
+<w>  at file dependencies U:\nextjs-projects\.next\server\webpack-runtime.js
+<w>  at file U:\nextjs-projects\.next\server\webpack-runtime.js
+<w>  at file dependencies U:\nextjs-projects\.next\server\pages\_error.js
+<w>  at file U:\nextjs-projects\.next\server\pages\_error.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\server\require.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\server\require.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\server\load-components.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\build\utils.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\build\utils.js
+<w>  at file dependencies U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs U:\nextjs-projects\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js

@@ -1,80 +1,46 @@
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "@/components/Navbar/navbar";
-import { Footer } from "./footer/footer";
-// import SplashCursor from "@/Animations/SplashCursor/SplashCursor";
-import CanvasCursor from "@/components/CanvasCursor/CanvasCursor";
-import 'react-creative-cursor/dist/styles.css';
+import './globals.css';
+import { Navbar } from '@/components/Navbar/navbar';
+import { Footer } from './footer/footer';
+import CustomCursor from '@/components/Cursor/CustomCursor';
 
-const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
-  metadataBase: new URL("https://markcoder.tech"), // Replace with your actual domain
-  title: "Markcoder's Portfolio",
+  metadataBase: new URL('https://markcoder.tech'),
+  title: 'Airaz Khan - Full Stack Developer',
   description:
-    "Dive into Markcoder's blog featuring insightful articles on full-stack development, React, Next.js, JavaScript, and creative UI/UX design. Discover tips, tutorials, and industry trends.",
-  icons: "/images/angular.png",
-  generator: "Mark ",
-  applicationName: "Markcoder's Blog",
-  referrer: "origin-when-cross-origin",
-  keywords: [
-    "Blog",
-    "Web Development",
-    "React",
-    "Next.js",
-    "JavaScript",
-    "UI/UX Design",
-    "Full-Stack Development",
-    "Programming",
-    "Tutorials",
-    "Industry Trends",
-  ],
-  authors: [
-    { name: "Markcoder", url: "https://markcoder.tech" },
-    
-    { name: "Airaz Khan" },
-  ],
-  creator: "Markcoder",
-  publisher: "Markcoder Publishing",
+    'Full Stack Developer crafting immersive 3D web experiences with React, Next.js, and Three.js.',
+  icons: '/images/angular.png',
+  generator: 'Next.js',
+  applicationName: 'Airaz Khan Portfolio',
+  referrer: 'origin-when-cross-origin',
+  keywords: ['Portfolio', 'Full Stack Developer', 'React', 'Next.js', 'Three.js', '3D Web', 'JavaScript'],
+  authors: [{ name: 'Airaz Khan' }],
+  creator: 'Airaz Khan',
   openGraph: {
-    title: "Markcoder's Blog",
-    description:
-      "Explore articles, tips, and tutorials on full-stack development, React, Next.js, JavaScript, and more.",
-    url: "https://markcoder.tech",
-    type: "website",
-    images: [
-      {
-        url: "/images/blog-og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Markcoder's Portfolio",
-      },
-    ],
+    title: 'Airaz Khan - Full Stack Developer',
+    description: 'Immersive 3D portfolio with React, Next.js and Three.js.',
+    url: 'https://markcoder.tech',
+    type: 'website',
+    images: [{ url: '/images/blog-og-image.png', width: 1200, height: 630, alt: 'Airaz Khan Portfolio' }],
   },
   twitter: {
-    card: "summary_large_image",
-    site: "@yourtwitterhandle",
-    creator: "@yourtwitterhandle",
-    title: "Markcoder's Blog",
-    description:
-      "Discover insightful articles on full-stack development, React, JavaScript, and more.",
-    images: ["/images/twitter-blog-card.png"],
+    card: 'summary_large_image',
+    title: 'Airaz Khan - Full Stack Developer',
+    description: 'Immersive 3D portfolio.',
+    images: ['/images/twitter-blog-card.png'],
   },
 };
 
 export const viewport = {
-  themeColor: "#ffffff", // Light theme for readability
-  colorScheme: "light",
-  viewport: "width=device-width, initial-scale=1.0",
+  themeColor: '#050505',
+  colorScheme: 'dark',
 };
-
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-    
-      <body className={inter.className}>
-        {/* <SplashCursor /> */}
-        <CanvasCursor/>
+      <body>
+        <CustomCursor />
+        <div className="nav-fade" />
         <Navbar />
         {children}
         <Footer />

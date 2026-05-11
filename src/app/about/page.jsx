@@ -1,97 +1,114 @@
 'use client';
 
-import Link from 'next/link';
-import '../about/about.css';
-import React, { useRef } from "react";
-import { BackgroundGradient } from '@/components/ui/background-gradient';
-import Image from "next/image";
-import Skills from '../skills/page';
-import Experience from '../experience/experience';
-import { useInView } from 'framer-motion';
-import { Lens } from '@/components/ui/lens'; // ✅ Import Lens
-import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Box, Code2, Layers3, ServerCog, Smartphone } from 'lucide-react';
+import { Lens } from '@/components/ui/lens';
 
-const SectionHeading = ({ title, icon }) => (
-  <motion.div
-    initial={{ opacity: 0, y: -40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    className="top-0 z-50 backdrop-blur-md bg-black/40 py-4"
-  >
-    <div className="relative w-fit mx-auto flex flex-col items-center">
-      {icon && <motion.span 
-                  animate={{ rotate: [0, 10, -10, 0] }} 
-                  transition={{ repeat: Infinity, duration: 3 }} 
-                  className="text-2xl mb-1">
-                  {icon}
-               </motion.span>}
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold 
-                     bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 
-                     bg-clip-text text-transparent animate-gradient drop-shadow-lg tracking-wider">
-        {title}
-      </h1>
-      <span className="absolute bottom-[-10px] w-full h-[3px] bg-gradient-to-r 
-                       from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-pulse"></span>
-    </div>
-  </motion.div>
-);
+const highlights = [
+  { icon: Code2, label: 'Frontend', desc: 'React, Next.js, Tailwind, Framer Motion' },
+  { icon: ServerCog, label: 'Backend', desc: 'Node.js, Express, MongoDB, REST APIs' },
+  { icon: Box, label: '3D Web', desc: 'React Three Fiber, Drei, Three.js, GSAP' },
+  { icon: Smartphone, label: 'Responsive', desc: 'Mobile-first interfaces and performance' },
+];
 
+const profilePoints = [
+  'Full-stack developer with a BCA background and a strong product mindset.',
+  'Focused on clean interfaces, smooth interaction, and scalable web architecture.',
+  'Comfortable taking a project from wireframe to polished deployment.',
+];
 
 export default function About() {
   const ref = useRef(null);
-  const isInView = useInView(ref);
+  const isInView = useInView(ref, { once: true, margin: '-120px' });
 
   return (
-    <div
-      ref={ref}
-      style={{
-        transform: isInView ? "none" : "translateX(-200px)",
-        opacity: isInView ? 1 : 0,
-        transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s"
-      }}
-    >
-      <section id='about' className="firstSection mt-4 min-h-[150vh]">
-            <SectionHeading title="About" />
+    <div ref={ref} className="section-inner about-section">
+      <motion.div
+        className="section-header"
+        initial={{ opacity: 0, y: 28 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.65 }}
+      >
+        <p className="section-kicker">Who I Am</p>
+        <h2 className="premium-heading">About Me</h2>
+      </motion.div>
 
-
-        <div className="container-about mt-10">
-
-           <div className="content-container">
-          <Lens spotlightForText>
-            <p className="content text-lg sm:text-xl text-gray-300 leading-relaxed">
-              Hello! I'm <span className="font-bold italic text-blue-400">Airaz Khan</span>, a passionate and dedicated FullStack developer who has recently completed a <span className="text-blue-400">Bachelor of Computer Applications (BCA)</span>.  
-              
-              I have a strong foundation in <span className="text-blue-400">HTML, CSS, JavaScript, React, Node.js, Express.js, and MongoDB</span>, and I enjoy creating intuitive and responsive web applications.
-
-              Over the course of my journey, I've built various projects, including <span className="text-blue-400">E-Commerce</span> and <span className="text-blue-400">Video Editor App</span>, where I utilized libraries such as <span className="text-blue-400">React, Framer Motion, React Simple Typewriter, React Use Measure, and React Router</span> to deliver dynamic user experiences. Recently, I've expanded my expertise to <span className="text-blue-400">Next.js</span> for server-side rendering and static site generation, and strengthened my backend skills with <span className="text-blue-400">Core Java</span>.
-
-              In addition to my technical abilities, I have a keen eye for design and a strong understanding of user experience principles, which I apply to every project. I am always eager to learn new technologies and stay updated with the latest industry trends.
-
-              When I'm not coding, you can find me sharing my knowledge on my <span className="text-blue-400">Instagram</span> page, where I post coding tips and tutorials. I also enjoy maintaining my fitness through <span className="text-blue-400">Gym workouts</span>.
-
-              I'm excited to connect with fellow developers, potential employers, and anyone interested in collaborating on innovative projects. Feel free to reach out to me via <span className="text-blue-400">Instagram</span> and <span className="text-blue-400">LinkedIn</span>.
-
-              <br />Thank you for visiting my portfolio!
-            </p>
+      <div className="about-grid">
+        <motion.div
+          className="portrait-frame"
+          initial={{ opacity: 0, x: -34 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.12 }}
+        >
+          <Lens>
+            <Image
+              src="/images/s1.jpg"
+              alt="Airaz Khan"
+              width={520}
+              height={620}
+              className="portrait-image"
+              priority={false}
+            />
           </Lens>
+          <div className="portrait-badge">
+            <Layers3 size={17} />
+            <span>3D Web Developer</span>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="about-copy surface-panel"
+          initial={{ opacity: 0, x: 34 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.22 }}
+        >
+          <div className="panel-rule" />
+          <h3>Building digital products with depth, speed, and visual polish.</h3>
+          <p>
+            I am Airaz Khan, a full-stack developer who enjoys creating modern web
+            applications that feel sharp, reliable, and easy to use.
+          </p>
+
+          <div className="profile-points">
+            {profilePoints.map((point) => (
+              <div key={point}>
+                <span />
+                <p>{point}</p>
+              </div>
+            ))}
           </div>
 
-          {/* ✅ Wrap Image with Lens */}
-          <div className='sm:flex justify-center h-1/2 xl:ml-44'>
-            <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-gradient-to-br from-black to-gray-900">
-              <Lens>
-                <Image
-                  src={`/images/s1.jpg`}
-                  alt="Airaz Khan"
-                  height="400"
-                  width="400"
-                  className="object-contain rounded-lg"
-                />
-              </Lens>
-            </BackgroundGradient>
+          <div className="tech-strip">
+            {['React', 'Next.js', 'Node.js', 'MongoDB', 'Three.js', 'GSAP', 'Tailwind', 'MUI'].map((tech) => (
+              <span key={tech}>{tech}</span>
+            ))}
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </div>
+
+      <motion.div
+        className="highlight-grid"
+        initial="hidden"
+        animate={isInView ? 'show' : 'hidden'}
+        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
+      >
+        {highlights.map(({ icon: Icon, label, desc }) => (
+          <motion.div
+            key={label}
+            className="highlight-card"
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              show: { opacity: 1, y: 0, transition: { duration: 0.48 } },
+            }}
+          >
+            <Icon size={22} />
+            <strong>{label}</strong>
+            <p>{desc}</p>
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
 }

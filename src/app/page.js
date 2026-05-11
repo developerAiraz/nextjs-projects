@@ -1,124 +1,198 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { useTypewriter } from 'react-simple-typewriter';
-import '../app/style.css';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowDown, ArrowUpRight, Cpu, Github, Linkedin, Mail } from 'lucide-react';
 import About from './about/page';
 import Experience from './experience/experience';
 import Skills from './skills/page';
-
-import { TypewriterEffect } from '@/components/ui/typewriter-effect';
-import { OrbitControls, useGLTF, Html, useProgress, Preload } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import Project from './projects/project';
 import Contact from './contact/contact';
 
-// ✅ 3D Model Component
-function Computers({ isMobile }) {
-  const computer = useGLTF("/desktop_pc/scene.gltf");
+const HeroCanvas = dynamic(() => import('@/components/HeroCanvas/HeroCanvas'), { ssr: false });
+
+const stats = [
+  { value: '1+', label: 'Years' },
+  { value: '20+', label: 'Projects' },
+  { value: '10+', label: 'Stacks' },
+];
+
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/developerMark17', icon: Github },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/developermark17', icon: Linkedin },
+  { label: 'Email', href: 'mailto:webdevairaz@gmail.com', icon: Mail },
+];
+
+function Stat({ value, label }) {
   return (
-    <mesh>
-      <hemisphereLight intensity={4} groundColor="black" />
-      <spotLight position={[-20, 50, 10]} angle={0.12} penumbra={1} intensity={1} castShadow shadow-mapSize={1024} />
-      <pointLight intensity={2} />
-      <primitive object={computer.scene} scale={isMobile ? 0.7 : 1.5} position={isMobile ? [1, 0, 0] : [0, -3.25, -1.5]} rotation={[-0.01, -0.2, -0.1]} />
-    </mesh>
+    <div className="hero-stat">
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </div>
   );
 }
 
-// ✅ Loader for 3D Model
-export function Loader() {
-  const { progress } = useProgress();
+function SectionBand({ id, children, tone = 'default' }) {
   return (
-    <Html>
-      <span className="canvas-load"></span>
-      <p style={{ fontSize: 14, color: 'white', fontWeight: 300, marginTop: 40 }}>
-        {progress.toFixed(2)}%
-      </p>
-    </Html>
+    <section id={id} className={`premium-section premium-section--${tone}`}>
+      {children}
+    </section>
   );
 }
 
 export default function Home() {
-  const ref = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const heroRef = useRef(null);
+  const modelContainerRef = useRef(null);
 
-  // ✅ Scroll Animation with Framer Motion
   const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
+    target: heroRef,
+    offset: ['start start', 'end start'],
   });
 
-  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 75]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-    setIsMobile(mediaQuery.matches);
-    const handler = (e) => setIsMobile(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
-
-  const firstLineWords = [
-    { text: "Hey", className: "text-blue-500 text-white" },
-    { text: "I'm", className: "text-blue-500 text-white" },
-    { text: "Airaz", className: "text-blue-500 text-white" },
-  ];
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.78], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
 
   const [text] = useTypewriter({
-    words: ["Full Stack Developer.", "Web Developer.", "React Developer.", "Angular Developer."],
+    words: ['Full Stack Developer', 'Next.js Engineer', 'React Specialist', '3D Web Builder'],
     loop: true,
-    delaySpeed: 2000,
+    delaySpeed: 1800,
   });
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      modelContainerRef.current?.classList.add('model-loaded');
+    }, 950);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <main className="flex flex-col items-center justify-between h-auto bg-black">
-      
-      {/* 🔥 Hero Section with 3D Model */}
-      <motion.div 
-        ref={ref} 
-        style={{ rotateX, scale, opacity, perspective: 1200 }} 
-        className="w-full h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden rounded-md relative z-10"
+    <main className="portfolio-shell">
+      <motion.section
+        ref={heroRef}
+        id="home"
+        className="hero-3d-section"
+        style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
       >
-        <Canvas frameloop="demand" shadows dpr={[1, 2]} camera={{ position: [20, 3, 5], fov: 25 }} gl={{ preserveDrawingBuffer: true }} style={{ height: "300px", marginTop: '100px' }}>
-          <Suspense fallback={<Loader />}>
-            <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
-            <Computers isMobile={isMobile} />
-          </Suspense>
-          <Preload all />
-        </Canvas>
-
-        <TypewriterEffect words={firstLineWords} className="mb-10 mt-10 firstLine" />
-        <div className="text-blue-500 text-xl md:text-3xl lg:text-5xl font-bold textTypewriter">
-          {text}
-          <span className="inline-block bg-blue-500 h-5 md:h-10 w-[4px] ml-1 animate-blink"></span>
+        <div ref={modelContainerRef} className="hero-model-stage" aria-hidden="true">
+          <div className="hero-scan-grid" />
+          <HeroCanvas />
+          <div className="hero-vignette" />
         </div>
-      </motion.div>
 
-      {/* ✅ About Section */}
-      <section className="relative  w-full bg-black">
+        <div className="hero-content">
+          <motion.div
+            className="hero-copy surface-panel"
+            initial={{ opacity: 0, x: -44 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.25, ease: 'easeOut' }}
+          >
+            <div className="eyebrow">
+              <Cpu size={15} />
+              Immersive Portfolio
+            </div>
+
+            <h1>
+              Airaz
+              <span>Khan</span>
+            </h1>
+
+            <p className="hero-role">
+              {text}
+              <span className="type-caret" />
+            </p>
+
+            <p className="hero-summary">
+              I build polished full-stack products with React, Next.js, Node.js, MongoDB,
+              and interactive Three.js experiences.
+            </p>
+
+            <div className="hero-actions">
+              <a href="#project" className="primary-action">
+                View Work
+                <ArrowUpRight size={17} />
+              </a>
+              <a href="#contact" className="ghost-action">
+                Contact
+                <Mail size={16} />
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.aside
+            className="hero-command surface-panel"
+            initial={{ opacity: 0, x: 44 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.42, ease: 'easeOut' }}
+          >
+            <div className="command-topline">
+              <span>Robot Interface</span>
+              <i />
+            </div>
+
+            <div className="command-readout">
+              <span>Design</span>
+              <strong>Frontend Systems</strong>
+            </div>
+            <div className="command-readout">
+              <span>Build</span>
+              <strong>MERN + Next.js</strong>
+            </div>
+            <div className="command-readout">
+              <span>Motion</span>
+              <strong>R3F + GSAP</strong>
+            </div>
+
+            <div className="hero-stats">
+              {stats.map((stat) => (
+                <Stat key={stat.label} {...stat} />
+              ))}
+            </div>
+
+            <div className="hero-socials" aria-label="Social links">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label={label}>
+                  <Icon size={17} />
+                </a>
+              ))}
+            </div>
+          </motion.aside>
+        </div>
+
+        <motion.a
+          className="scroll-cue"
+          href="#about"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.5 }}
+          aria-label="Scroll to about"
+        >
+          <ArrowDown size={17} />
+        </motion.a>
+      </motion.section>
+
+      <SectionBand id="about" tone="intro">
         <About />
-      </section>
+      </SectionBand>
 
-      {/* ✅ Experience Section (Horizontal Scroll) */}
-      <section className="relative  w-full">
+      <SectionBand id="experience" tone="timeline">
         <Experience />
-      </section>
+      </SectionBand>
 
-      {/* ✅ Skills Section */}
-      <section className=" bg-black ">
+      <SectionBand id="skills" tone="stack">
         <Skills />
-      </section>
+      </SectionBand>
 
-      <section className=" ">
-       <Project/>
-      </section>
+      <SectionBand id="project" tone="work">
+        <Project />
+      </SectionBand>
 
-      
-
+      <SectionBand id="contact" tone="contact">
+        <Contact />
+      </SectionBand>
     </main>
   );
 }

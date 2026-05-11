@@ -1,104 +1,130 @@
-import React from 'react'
+import fs from 'fs';
+import path from 'path';
+import Image from 'next/image';
 import Link from 'next/link';
-import { CalendarDays, User } from 'lucide-react';
-import { buttonVariants } from "@/components/ui/button"
-import fs, {readFileSync} from 'fs';
 import matter from 'gray-matter';
+import { ArrowUpRight, BookOpen, CalendarDays, Sparkles, User } from 'lucide-react';
 
-// ... keep your existing imports and data fetching logic
-const dirContent = fs.readdirSync("content","utf-8");
-const blogs = dirContent.map(file=>{
-  const fileContent = fs.readFileSync(`content/${file}`,"utf-8");
-  const{data} = matter(fileContent);
-return data
+export const metadata = {
+  title: 'Blog - Airaz Khan',
+  description: 'Articles on full-stack development, AI tools, React, Next.js, and modern web engineering.',
+};
 
-})
+function getBlogs() {
+  const contentDir = path.join(process.cwd(), 'content');
+  const files = fs.readdirSync(contentDir).filter((file) => file.endsWith('.md'));
 
-export const metadata = { /* keep existing metadata */ }
+  return files
+    .map((file) => {
+      const fileContent = fs.readFileSync(path.join(contentDir, file), 'utf-8');
+      const { data, content } = matter(fileContent);
+      const wordCount = content.split(/\s+/).filter(Boolean).length;
 
-const Blog = () => {
+      return {
+        title: data.title,
+        slug: data.slug || file.replace(/\.md$/, ''),
+        description: data.description,
+        date: data.date,
+        author: data.author || 'Airaz Khan',
+        image: data.image,
+        readingTime: Math.max(2, Math.ceil(wordCount / 220)),
+      };
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+export default function Blog() {
+  const blogs = getBlogs();
+  const [featured, ...rest] = blogs;
+
   return (
-    <div className="min-h-screen ">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center mb-16 mt-14">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text ">
-            Latest Articles
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Explore insights on full-stack development, React, Next.js, and modern web development.
+    <main className="blog-shell">
+      <section className="blog-hero">
+        <div className="blog-hero-copy">
+          <div className="eyebrow">
+            <Sparkles size={15} />
+            Engineering Notes
+          </div>
+          <h1>Blog</h1>
+          <p>
+            Practical writing on full-stack development, AI products, React, Next.js,
+            and the systems behind polished web experiences.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogs.map((blog) => (
-            <article 
-              key={blog.slug}
-              className="group relative overflow-hidden rounded-2xl bg-card shadow-lg hover:shadow-xl transition-shadow duration-300 dark:shadow-gray-800/10"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={blog.image} 
-                  alt={blog.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
+        <div className="blog-hero-panel surface-panel">
+          <BookOpen size={24} />
+          <strong>{blogs.length}</strong>
+          <span>Published Articles</span>
+        </div>
+      </section>
+
+      {featured && (
+        <section className="featured-blog section-inner">
+          <Link href={`/blogpost/${featured.slug}`} className="featured-blog-card surface-panel">
+            <div className="featured-image">
+              <Image src={featured.image} alt={featured.title} width={760} height={460} priority />
+            </div>
+            <div className="featured-copy">
+              <span className="featured-label">Featured</span>
+              <h2>{featured.title}</h2>
+              <p>{featured.description}</p>
+              <div className="blog-meta">
+                <span>
+                  <User size={15} />
+                  {featured.author}
+                </span>
+                <span>
+                  <CalendarDays size={15} />
+                  {new Date(featured.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+                <span>{featured.readingTime} min read</span>
               </div>
-              
-              <div className="p-6">
-                <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <User className="w-4 h-4" />
-                    <span>{blog.author}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <CalendarDays className="w-4 h-4" />
-                    <time dateTime={blog.date}>
-                      {new Date(blog.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </time>
-                  </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      <section className="blog-grid-section section-inner">
+        <div className="blog-grid">
+          {rest.map((blog) => (
+            <article key={blog.slug} className="blog-card surface-panel">
+              <Link href={`/blogpost/${blog.slug}`} className="blog-card-image">
+                <Image src={blog.image} alt={blog.title} width={520} height={320} />
+              </Link>
+
+              <div className="blog-card-copy">
+                <div className="blog-meta">
+                  <span>
+                    <User size={15} />
+                    {blog.author}
+                  </span>
+                  <span>
+                    <CalendarDays size={15} />
+                    {new Date(blog.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
                 </div>
 
-                <h2 className="text-xl font-bold mb-2 line-clamp-2">
-                  {blog.title}
-                </h2>
-                <p className="text-muted-foreground line-clamp-3 mb-4 leading-relaxed">
-                  {blog.description}
-                </p>
-                
-                <Link 
-                  href={`/blogpost/${blog.slug}`}
-                  className={buttonVariants({ 
-                    variant: "secondary",
-                    className: "w-full group/button transition-all"
-                  })}
-                >
+                <h2>{blog.title}</h2>
+                <p>{blog.description}</p>
+
+                <Link href={`/blogpost/${blog.slug}`} className="blog-read-link">
                   Read Article
-                  <svg 
-                    className="ml-2 w-4 h-4 transition-transform group-hover/button:translate-x-1"
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M17 8l4 4m0 0l-4 4m4-4H3" 
-                    />
-                  </svg>
+                  <ArrowUpRight size={16} />
                 </Link>
               </div>
             </article>
           ))}
         </div>
-        <h1 className='text-center text-4xl font-bold mt-10'>Stay tuned</h1>
-      </div>
-    </div>
-  )
+      </section>
+    </main>
+  );
 }
-
-export default Blog

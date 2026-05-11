@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import { cn } from "@/lib/utils";
 import React, {
   createContext,
@@ -65,14 +65,16 @@ export const CardContainer = ({
 
 export const CardBody = ({
   children,
-  className
+  className,
+  ...rest
 }) => {
   return (
     (<div
       className={cn(
         "h-96 w-96 [transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
         className
-      )}>
+      )}
+      {...rest}>
       {children}
     </div>)
   );

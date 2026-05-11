@@ -1,198 +1,137 @@
-"use client";
-import "../experience/experience.css";
-import "../experience/experienceResponsiveness.css";
-import Skills from "../skills/page";
-import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
-import { useInView, motion } from 'framer-motion';
+'use client';
 
-gsap.registerPlugin(ScrollTrigger);
+import Image from 'next/image';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { BadgeCheck, BriefcaseBusiness, CalendarDays } from 'lucide-react';
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 
-const SectionHeading = ({ title, icon }) => (
-  <motion.div
-    initial={{ opacity: 0, y: -40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    className="top-0 z-50 backdrop-blur-md bg-black/40 py-4"
-  >
-    <div className="relative w-fit mx-auto flex flex-col items-center">
-      {icon && <motion.span 
-                  animate={{ rotate: [0, 10, -10, 0] }} 
-                  transition={{ repeat: Infinity, duration: 3 }} 
-                  className="text-2xl mb-1">
-                  {icon}
-               </motion.span>}
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold 
-                     bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 
-                     bg-clip-text text-transparent animate-gradient drop-shadow-lg tracking-wider">
-        {title}
-      </h1>
-      <span className="absolute bottom-[-10px] w-full h-[3px] bg-gradient-to-r 
-                       from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-pulse"></span>
-    </div>
-  </motion.div>
-);
+const experiences = [
+  {
+    title: 'Full Stack Developer',
+    company: 'Roadcast',
+    duration: 'Current Role',
+    img: '/images/developer.png',
+    accent: '#a3e635',
+    details: [
+      'Building full-stack product features with Angular on the frontend and Python services on the backend.',
+      'Working with NoSQL data models, APIs, dashboards, and operational workflows.',
+      'Handling responsive UI polish, integrations, and production fixes across active modules.',
+    ],
+  },
+  {
+    title: 'Full Stack Developer Intern',
+    company: 'Naresh IT Hyderabad',
+    duration: 'March 2023 - June 2023',
+    img: '/images/naresh.png',
+    accent: '#22d3ee',
+    details: [
+      'Built an e-commerce store with the MERN stack.',
+      'Integrated authentication, payments, REST APIs, and MongoDB storage.',
+      'Improved UI structure for product browsing and checkout flows.',
+    ],
+  },
+  {
+    title: 'Freelance Frontend Developer',
+    company: 'Cansell.in',
+    duration: 'March 2024 - August 2024',
+    img: '/projects/P2.png',
+    accent: '#34d399',
+    details: [
+      'Developed a responsive frontend using Next.js.',
+      'Implemented navigation, carousel interactions, and optimized layouts.',
+      'Handled interface updates, bug fixes, and post-launch support.',
+    ],
+  },
+  {
+    title: 'Freelance Full-Stack Developer',
+    company: 'Certifagile - Axial Coder',
+    duration: 'March 2025 - July 2025',
+    img: '/projects/P1.png',
+    accent: '#f59e0b',
+    details: [
+      'Developed and deployed a full-stack MERN application.',
+      'Built authentication, admin dashboard, and production REST APIs.',
+      'Collaborated remotely on requirements, fixes, and deployment.',
+    ],
+  },
+  {
+    title: '3D Model Website Developer',
+    company: 'Personal Project',
+    duration: '2024',
+    img: '/projects/p4.png',
+    accent: '#f472b6',
+    details: [
+      'Created an interactive 3D model viewer with React Three Fiber.',
+      'Added hover tilt, smooth model rotation, and motion polish.',
+      'Balanced visual quality with responsive browser performance.',
+    ],
+  },
+];
 
 export default function Experience() {
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const ctx = gsap.context(() => {
-      const sections = gsap.utils.toArray(".exp-block").filter(el => el instanceof HTMLElement);
-      if (!sections.length) return;
-
-      // ✅ Horizontal scroll animation
-      const horizontalTween = gsap.to(sections, {
-        xPercent: -100 * (sections.length - 1),
-        ease: "none",
-      });
-
-      // ✅ ScrollTrigger to pin and control horizontal scroll
-      ScrollTrigger.create({
-        trigger: ".horizontal-scroll",
-        start: "top top", // ✅ start pinning as soon as it hits top
-        pin: true,
-        scrub: 1,
-        animation: horizontalTween,
-        anticipatePin: 1,
-        invalidateOnRefresh: true, // ✅ important for resizing
-        end: () =>
-          "+=" +
-          (document.querySelector(".exp-wrapper")?.scrollWidth - window.innerWidth || 0),
-      });
-
-      // ✅ Reveal animations for text inside each block
-      sections.forEach((block) => {
-        const targets = block.querySelectorAll("h2, h3, p, li");
-        if (!targets.length) return;
-
-        gsap.from(targets, {
-          y: 80,
-          opacity: 0,
-          rotateX: 15,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: block,
-            containerAnimation: horizontalTween,
-            start: "left center",
-          },
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-120px' });
 
   return (
-    <div id="experience" ref={containerRef} className="container-fluid relative ">
-     <SectionHeading title="Experience" icon="🚀" />
+    <div ref={ref} className="section-inner experience-section">
+      <motion.div
+        className="section-header"
+        initial={{ opacity: 0, y: 28 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.65 }}
+      >
+        <p className="section-kicker">Career Signal</p>
+        <h2 className="premium-heading">Experience</h2>
+      </motion.div>
 
-      {/* ✅ Spacer to prevent auto jump */}
-      <div className="h-[90vh]"></div>
+      <div className="experience-track">
+        {experiences.map((item, index) => (
+          <motion.article
+            key={`${item.company}-${item.title}`}
+            className="experience-item"
+            initial={{ opacity: 0, y: 36 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.58, delay: 0.12 + index * 0.1 }}
+          >
+            <div className="timeline-marker" style={{ '--accent': item.accent }}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </div>
 
-      {/* ✅ Horizontal Scroll Section */}
-      <div className="horizontal-scroll relative overflow-hidden">
-       <section className="exp-wrapper flex w-[400vw] h-screen">
-  <ExperienceBlock
-  title="Full Stack Developer Intern"
-  company="Naresh IT Hyderabad"
-  duration="[March, 2023] – [June, 2023]"
-  img="/images/naresh.png"
-  variant="large"   // ✅ This makes the first card bigger
-  details={[
-    "Built an E-commerce store with MERN stack.",
-    "Integrated payment gateways and authentication.",
-    "Implemented REST APIs, JWT, and MongoDB storage.",
-  ]}
-/>
-  <ExperienceBlock
-    title="Freelance Frontend Developer"
-    company="Cansell.in"
-    duration="[March, 2024] – [August, 2024]"
-    img="/projects/P2.png"
-    details={[
-      "Developed a complete responsive frontend using Next.js.",
-      "Implemented custom hamburger navigation, carousel, and optimized UI.",
-      "Handled UI updates, bug fixes, and post-launch support throughout the project phases.",
-    ]}
-  />
+            <CardContainer className="experience-tilt" containerClassName="card-container-compact">
+              <CardBody className="experience-card surface-panel">
+                <CardItem translateZ="55" className="experience-media">
+                  <Image src={item.img} alt={item.company} width={520} height={320} />
+                </CardItem>
 
-  <ExperienceBlock
-    title="Freelance Full-Stack Developer – Certifagile"
-    company="Axial Coder"
-    duration="[March, 2025] – [July, 2025]"
-    img="/projects/P1.png"
-    details={[
-      "Developed and deployed a full-stack web application using MERN stack.",
-      "Built authentication, admin dashboard, and REST APIs.",
-      "Worked on scalability and optimized UI performance across devices.",
-      "Collaborated remotely on project requirements, fixes, and deployment over several phases.",
-    ]}
-  />
+                <CardItem translateZ="38" className="experience-content">
+                  <div className="experience-meta" style={{ '--accent': item.accent }}>
+                    <span>
+                      <BriefcaseBusiness size={15} />
+                      {item.company}
+                    </span>
+                    <span>
+                      <CalendarDays size={15} />
+                      {item.duration}
+                    </span>
+                  </div>
 
-  <ExperienceBlock
-    title="3D Model Website Developer"
-    company="Personal Project"
-    duration="[2024]"
-    img="/projects/p4.png"
-    details={[
-      "Created an interactive 3D viewer with React Three Fiber and Framer Motion.",
-      "Implemented hover tilt effects and smooth model rotation with performance optimizations.",
-    ]}
-  />
-</section>
+                  <h3>{item.title}</h3>
 
+                  <ul>
+                    {item.details.map((detail) => (
+                      <li key={detail}>
+                        <BadgeCheck size={16} />
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardItem>
+              </CardBody>
+            </CardContainer>
+          </motion.article>
+        ))}
       </div>
-
-  
     </div>
   );
 }
-
-/* ✅ Reusable Experience Card */
-function ExperienceBlock({ title, company, duration, img, details, variant }) {
-  // ✅ Apply different sizes for the first vs. other cards
-  const cardWidth = variant === "large" 
-    ? "w-full sm:w-[90%] md:w-[350px] lg:w-[350px]" 
-    : "w-full sm:w-[90%] md:w-[400px] lg:w-[450px]";
-
-  const cardHeight = variant === "large" 
-    ? "h-[330px] sm:h-[300px] md:h-[350px]" 
-    : "h-[250px] sm:h-[300px] md:h-[350px]";
-
-  return (
-    <div className="exp-block w-screen min-h-screen flex flex-col lg:flex-row justify-center items-center p-4 sm:p-8">
-      
-      {/* ✅ 3D Card with Conditional Sizes */}
-      <CardContainer className={`inter-var ${cardWidth}`}>
-        <CardBody className={`relative group/card ${cardWidth} ${cardHeight} rounded-xl p-4 sm:p-6 border bg-gradient-to-br from-gray-800 to-black`}>
-          <CardItem translateZ="100" className="w-full mt-2 sm:mt-4">
-            <img 
-              src={img} 
-              alt={company} 
-              className="h-full w-full object-cover rounded-xl shadow-xl" 
-            />
-          </CardItem>
-        </CardBody>
-      </CardContainer>
-
-      {/* ✅ Details Section */}
-      <div className="details text-gray-300 max-w-lg mt-6 lg:mt-0 lg:ml-8 text-center lg:text-left">
-        <h2 className="text-2xl sm:text-3xl font-bold text-blue-400">{title}</h2>
-        <h3 className="text-md sm:text-lg">{company}</h3>
-        <p className="italic mb-4">{duration}</p>
-
-        <ul className="list-disc list-inside space-y-2 text-sm sm:text-base">
-          {details.map((d, i) => <li key={i}>{d}</li>)}
-        </ul>
-      </div>
-
-    </div>
-  );
-}
-
